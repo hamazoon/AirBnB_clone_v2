@@ -11,10 +11,6 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from models.user import User
 from models.amenity import Amenity
 
-
-classes = {"Amenity": Amenity, "City": City,
-           "Place": Place, "Review": Review, "State": State, "User": User}
-
 class DBStorage:
     '''
     DBStorage
@@ -33,18 +29,33 @@ class DBStorage:
         )
         if getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
-
-
     def all(self, cls=None):
-        """query on the current database session"""
-        new_dict = {}
-        for childCls in classes:
-            if cls is None or cls is classes[childCls] or cls is childCls:
-                objs = self.__session.query(classes[childCls]).all()
-                for obj in objs:
-                    key = obj.__class__.__name__ + '.' + obj.id
-                    new_dict[key] = obj
-        return (new_dict)
+        classes = {
+            "City": City,
+            "State": State,
+            "User": User,
+            "Place": Place,
+            "Review": Review,
+            "Amenity": Amenity,
+        }
+        result = {}
+        query_rows = []
+        
+        if cls:
+            if type(cls) is str:
+                cls = eval(cls)
+            query_rows = self.__session.query(cls)
+            for obj in query_rows:
+                key = '{}.{}'.format(type(obj).__name, obj.id)
+                result[key] = obj
+            return result
+        else:
+            for name, value in classes.items():
+                query_rows = self.__session.query(value)
+                for obj in query_rows:
+                    key = '{}.{}'.format(name, obj.id)
+                    result[key] = obj
+            return result
 
     def new(self, obj):
         '''add the object to the current database session'''
