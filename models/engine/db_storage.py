@@ -69,7 +69,7 @@ class DBStorage:
         '''delete obj from the current database session'''
         self.__session.delete(obj)
 
-    def relod(self):
+    def reload(self):
         Base.metadata.create_all(self.__engine)
         session_factory = sessionmaker(
             bind=self.__engine, expire_on_commit=False
