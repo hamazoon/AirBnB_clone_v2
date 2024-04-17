@@ -41,20 +41,3 @@ class Place(BaseModel, Base):
                     review_list.append(review)
             return review_list
 
-        @property
-        def amenities(self):
-            '''
-            Returns the list of `Amenity` instances
-            based on the attribute `amenity_ids` that
-            contains all `Amenity.id` linked to the Place
-            '''
-            return self.amenity_ids
-
-        @amenities.setter
-        def amenities(self, obj=None):
-            '''
-            handles append method for adding an
-            Amenity.id to the attribute amenity_ids
-            '''
-            if type(obj) is Amenity and obj.id not in self.amenity_ids:
-                self.amenity_ids.append(obj.id)
