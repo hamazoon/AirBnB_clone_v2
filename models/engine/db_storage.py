@@ -11,6 +11,7 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from models.user import User
 from models.amenity import Amenity
 
+
 class DBStorage:
     '''
     DBStorage
@@ -29,6 +30,7 @@ class DBStorage:
         )
         if getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
+
     def all(self, cls=None):
         classes = {
             "City": City,
@@ -40,7 +42,7 @@ class DBStorage:
         }
         result = {}
         query_rows = []
-        
+
         if cls:
             if type(cls) is str:
                 cls = eval(cls)
